@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Home, About, SignIn, SignUp, Dashboard, Projects} from "./pages/index.js"
 import Header from './components/Header.jsx'
+import FooterCom from './components/Footer.jsx'
 
 export default function App() {
   return (
@@ -15,7 +16,7 @@ export default function App() {
       <Route path="/projects" element={<Projects />} />
 
     </Routes>
-
+    <FooterCom/>
   </BrowserRouter>
 )
 }
