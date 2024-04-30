@@ -17,6 +17,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signoutSuccess,
 } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
@@ -109,15 +110,15 @@ export default function DashProfile() {
     }
     try {
       dispatch(updateStart());
-      const res = await fetch(`/api/v1/users/update/${currentUser._id}`, {
+      const response = await fetch(`/api/v1/users/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
-      if (!res.ok) {
+      const data = await response.json();
+      if (!response.ok) {
         dispatch(updateFailure(data.message));
         setUpdateUserError(data.message);
       } else {
@@ -134,17 +135,33 @@ export default function DashProfile() {
     setShowModal(false);
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/v1/users/delete/${currentUser._id}`, {
+      const response = await fetch(`/api/v1/users/delete/${currentUser._id}`, {
         method: 'DELETE',
       });
-      const data = await res.json();
-      if (!res.ok) {
+      const data = await response.json();
+      if (!response.ok) {
         dispatch(deleteUserFailure(data.message));
       } else {
         dispatch(deleteUserSuccess(data));
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+
+  const handleSignout = async () => {
+    try {
+      const response = await fetch('/api/v1/users/sign-out', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(data.message);
+      } else {
+        dispatch(signoutSuccess());
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -225,7 +242,9 @@ export default function DashProfile() {
         <span onClick={() => setShowModal(true)} className='cursor-pointer'>
           Delete Account
         </span>
-        <span className='cursor-pointer'>Sign Out</span>
+        <span onClick={handleSignout} className='cursor-pointer'>
+          Sign Out
+        </span>
       </div>
       {updateUserSuccess && (
         <Alert color='success' className='mt-5'>
