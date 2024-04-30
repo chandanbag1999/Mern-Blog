@@ -82,3 +82,59 @@ export const loginUser = asyncHandler(async (req, res) => {
     .cookie("access_token", token, options)
     .json(new ApiResponse(200, "User logged in successfully", loggedInUser));
 })
+
+
+export const google = asyncHandler(async (req, res) => {
+    const { email, name, googlePhotoUrl } = req.body;
+    const user = await User.findOne({ email });
+
+    if (user) {
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        )
+
+        const loggedInUser = await User.findById(user._id).select("-password");
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        return res
+        .status(200)
+        .cookie("access_token", token, options)
+        .json(new ApiResponse(200, "User logged in successfully", loggedInUser));
+
+    } else {
+        const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+
+        const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
+        const newUser = await User.create({
+            username: name.toLowerCase().split(" ").join("") + Math.random().toString(9).slice(-4),
+            email,
+            password: hashedPassword,
+            profilePicture: googlePhotoUrl,
+        });
+
+        const token = jwt.sign(
+            { id: newUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        )
+
+        const loggedInUser = await User.findById(newUser._id).select("-password");
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        return res
+        .status(200)
+        .cookie("access_token", token, options)
+        .json(new ApiResponse(200, "User logged in successfully", loggedInUser));
+    };
+});
