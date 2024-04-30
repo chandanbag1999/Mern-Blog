@@ -10,6 +10,7 @@ router.route("/sign-up").post(registerUser)
 router.route("/sign-in").post(loginUser)
 router.route("/google").post(google)
 router.route("/update/:userId").put(verifyToken, updateUser);
+router.route("/delete/:userId").delete(verifyToken, deleteUser);
 
 
 export default router;

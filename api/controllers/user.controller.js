@@ -188,3 +188,15 @@ export const updateUser = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "User updated successfully", userWithoutPassword))
 })
+
+
+export const deleteUser = asyncHandler(async (req, res) => {
+    if (req.user.id !== req.params.userId) {
+        throw new ApiError(401, "You are not allowed to delete this user");
+    }
+
+    await User.findByIdAndDelete(req.params.userId);
+    return res
+    .status(200)
+    .json(new ApiResponse(200, "User deleted successfully"))
+});
