@@ -4,6 +4,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import bcryptjs from "bcryptjs";
 import { User } from "../models/user.model.js"
 import jwt from "jsonwebtoken";
+import { captureRejectionSymbol } from "events";
 
 
 
@@ -207,3 +208,5 @@ export const signOut = asyncHandler(async (req, res) => {
     .clearCookie("access_token")
     .json(new ApiResponse(200, "User signed out successfully"))
 });
+
+
