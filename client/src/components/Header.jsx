@@ -1,4 +1,4 @@
-import { Button, Avatar, Dropdown, Navbar, TextInput } from 'flowbite-react';
+import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
@@ -9,17 +9,15 @@ import { signoutSuccess } from '../redux/user/userSlice';
 export default function Header() {
   const path = useLocation().pathname;
   const dispatch = useDispatch();
-
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-
   const handleSignout = async () => {
     try {
-      const response = await fetch('/api/v1/users/sign-out', {
+      const res = await fetch('/api/v1/users/sign-out', {
         method: 'POST',
       });
-      const data = await response.json();
-      if (!response.ok) {
+      const data = await res.json();
+      if (!res.ok) {
         console.log(data.message);
       } else {
         dispatch(signoutSuccess());
@@ -28,7 +26,6 @@ export default function Header() {
       console.log(error.message);
     }
   };
-
   return (
     <Navbar className='border-b-2'>
       <Link
@@ -36,7 +33,7 @@ export default function Header() {
         className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
       >
         <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-          Lucifer's
+          Sahand's
         </span>
         Blog
       </Link>
@@ -58,7 +55,7 @@ export default function Header() {
           pill
           onClick={() => dispatch(toggleTheme())}
         >
-          {theme === 'light' ? <FaMoon /> : <FaSun />}
+          {theme === 'light' ? <FaSun /> : <FaMoon />}
         </Button>
         {currentUser ? (
           <Dropdown
