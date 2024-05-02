@@ -209,5 +209,3 @@ export const signOut = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "User signed out successfully"))
 });
 
-
-s
